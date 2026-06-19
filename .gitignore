@@ -1,7 +1,3 @@
-# Python cache
+.venv/
 __pycache__/
-*.pyc
-
-# SQLite database
 kanyewest.db
-
