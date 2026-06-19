@@ -1,0 +1,24 @@
+# Ignorar arquivos do Git
+.git
+.gitignore
+
+# Ignorar ambientes virtuais do Python
+venv/
+.venv/
+env/
+prod/
+
+# Ignorar cache do Python e bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar o banco de dados SQLite local (o container deve criar o seu próprio ou usar um volume)
+kanyewest.db
+
+# Ignorar arquivos do sistema operacional ou IDEs
+.DS_Store
+.vscode/
+.idea/
+
