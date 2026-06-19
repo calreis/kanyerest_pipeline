@@ -56,7 +56,4 @@ df = pd.read_sql_query("SELECT * FROM frases_kanye ORDER BY data DESC", conn)
 print(df.head())
 conn.close()
 ```
-<<<<<<< HEAD
-=======
 
->>>>>>> d3c1d93 (chore: configurar ambiente virtual e corrigir nome do README)
