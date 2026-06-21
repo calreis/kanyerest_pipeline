@@ -57,3 +57,37 @@ print(df.head())
 conn.close()
 ```
 
+## 🛠️ Troubleshooting (Resolução de Problemas)
+
+Durante o deploy da automação no ecossistema Linux/Docker do servidor DietPi, foi identificado e documentado um comportamento clássico de barramento de permissões.
+
+### Erro: `permission denied while trying to connect to the docker API`
+
+Se ao checar o arquivo `pipeline.log` você se deparar com a mensagem abaixo:
+```text
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+```
+
+#### 🔍 O Motivo Técnico
+O daemon do Docker gerencia o ambiente através do arquivo de socket `/var/run/docker.sock`, pertencente ao usuário `root`. O daemon do Cron roda em um shell não-interativo isolado em segundo plano. Quando ele tenta disparar a imagem usando o escopo do usuário comum, o sistema operacional bloqueia o acesso por segurança.
+
+#### 🚀 Como foi resolvido (Duas abordagens possíveis):
+
+**Abordagem 1: Inclusão no Grupo de Segurança (Utilizada no projeto)**
+Dar permissão ao usuário do sistema para gerenciar o Docker sem a palavra `sudo`:
+```bash
+sudo usermod -aG docker seu_usuario_aqui
+sudo systemctl restart cron
+```
+
+**Abordagem 2: Elevação no Escopo do Cron**
+Migrar a linha de agendamento do crontab de usuário para o crontab global do superusuário administrado pelo sistema:
+```bash
+sudo crontab -e
+```
+E mapear o caminho absoluto do binário do Docker de forma explícita:
+```text
+0 0 * * * /usr/bin/docker run --rm -v /mnt/hdraid/dietpi_userdata/kanyerest:/app -w /app pipeline-kanye >> /mnt/hdraid/dietpi_userdata/kanyerest/pipeline.log 2>&1
+```
+
+
